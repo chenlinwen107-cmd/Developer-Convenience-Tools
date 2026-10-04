@@ -1,10 +1,11 @@
-name: DCT Phase 1 Android Build
+name: DCT Android Source Build
 
 on:
   push:
-    branches: [main]
+    branches:
+      - ui-redesign-source
     paths:
-      - 'DCT-phase1-fix1.zip'
+      - 'source/dct/**'
       - '.github/workflows/android-build.yml'
   workflow_dispatch:
 
@@ -13,58 +14,45 @@ permissions:
 
 jobs:
   build:
-    name: Build Debug APK
+    name: Build Debug APK from source
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Verify ZIP archive
-        run: |
-          test -f DCT-phase1-fix1.zip
-          unzip -t DCT-phase1-fix1.zip
-
-      - name: Extract project
-        run: unzip -q DCT-phase1-fix1.zip -d .
+        uses: actions/checkout@v4
 
       - name: Set up JDK 17
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
       - name: Set up Android SDK
-        uses: android-actions/setup-android@v4
-        with:
-          packages: 'platform-tools'
+        uses: android-actions/setup-android@v3
 
       - name: Install Android SDK components
         run: |
           sdkmanager "platforms;android-36" "build-tools;36.0.0"
 
       - name: Set up Gradle 8.13
-        uses: gradle/actions/setup-gradle@v6
+        uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
-          cache-provider: basic
 
       - name: Show build environment
         run: |
           java -version
           gradle --version
-          sdkmanager --list_installed
 
       - name: Build Debug APK
-        working-directory: dct
-        run: |
-          gradle --no-daemon --stacktrace :app:assembleDebug
+        working-directory: source/dct
+        run: gradle --no-daemon --stacktrace :app:assembleDebug
 
       - name: Upload Debug APK
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: DCT-phase1-debug-apk
-          path: dct/app/build/outputs/apk/debug/*.apk
+          name: DCT-ui-redesign-debug-apk
+          path: source/dct/app/build/outputs/apk/debug/*.apk
           if-no-files-found: error
           retention-days: 7
