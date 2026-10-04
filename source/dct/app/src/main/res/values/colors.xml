@@ -1,3 +1,5 @@
 <resources>
     <color name="ic_launcher_background">#3F5BD9</color>
+    <!-- 与 Theme.kt 中浅色 background 一致 -->
+    <color name="dct_window_background">#FFFFFF</color>
 </resources>

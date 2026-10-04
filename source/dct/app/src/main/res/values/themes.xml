@@ -1,3 +1,6 @@
 <resources>
-    <style name="Theme.DCT" parent="android:Theme.Material.NoActionBar" />
+    <!-- 启动窗口背景与 Compose 主题（DctTheme）的背景色保持一致，避免冷启动闪色。 -->
+    <style name="Theme.DCT" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/dct_window_background</item>
+    </style>
 </resources>
