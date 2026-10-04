@@ -1,0 +1,24 @@
+#!/bin/sh
+# Minimal Gradle Wrapper launcher.
+# Requires gradle/wrapper/gradle-wrapper.jar (NOT bundled in this archive, see README).
+# To replace this script and the jar with the official ones, run once:  gradle wrapper --gradle-version 8.13
+
+APP_HOME=$(cd "$(dirname "$0")" >/dev/null 2>&1 && pwd -P) || exit 1
+WRAPPER_JAR="$APP_HOME/gradle/wrapper/gradle-wrapper.jar"
+
+if [ ! -f "$WRAPPER_JAR" ]; then
+    echo "ERROR: $WRAPPER_JAR not found." >&2
+    echo "This archive does not include gradle-wrapper.jar. Generate it with:" >&2
+    echo "    gradle wrapper --gradle-version 8.13" >&2
+    echo "or open the project in Android Studio (it uses its own Gradle)." >&2
+    exit 1
+fi
+
+if [ -n "$JAVA_HOME" ] && [ -x "$JAVA_HOME/bin/java" ]; then
+    JAVACMD="$JAVA_HOME/bin/java"
+else
+    JAVACMD=java
+fi
+
+exec "$JAVACMD" -Xmx64m -Xms64m -Dorg.gradle.appname=gradlew \
+    -classpath "$WRAPPER_JAR" org.gradle.wrapper.GradleWrapperMain "$@"
